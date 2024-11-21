@@ -1,4 +1,4 @@
-package me.enzottic.db
+package me.enzottic.modules.db
 
 import io.ktor.http.*
 import io.ktor.server.application.*
