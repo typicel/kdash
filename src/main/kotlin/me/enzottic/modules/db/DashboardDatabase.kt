@@ -1,14 +1,23 @@
-package me.enzottic.models
+package me.enzottic.modules.db
 
 import kotlinx.coroutines.Dispatchers
+import me.enzottic.models.Link
+import me.enzottic.models.LinkCategory
 import org.jetbrains.exposed.sql.*
 import org.jetbrains.exposed.sql.transactions.experimental.newSuspendedTransaction
 import org.jetbrains.exposed.sql.transactions.transaction
 
-class DatabaseLinkRepository(database: Database): LinkRepository {
+class DashboardDatabase(database: Database) {
     object Links : Table() {
+        val id = integer("id").autoIncrement()
         val name = varchar("name", 256)
         val url = varchar("url", 256)
+        val categoryId = integer("category_id").references(LinkCategories.id)
+    }
+
+    object LinkCategories : Table() {
+        val id = integer("id").autoIncrement()
+        val name = varchar("name", 256)
     }
 
     init {
@@ -17,21 +26,23 @@ class DatabaseLinkRepository(database: Database): LinkRepository {
         }
     }
 
-    override suspend fun allLinks(): List<Link> = dbQuery {
+    suspend fun allLinks(): List<Link> = dbQuery {
         Links
             .selectAll()
             .map { Link(it[Links.name], it[Links.url]) }
     }
 
-    override suspend fun addLink(link: Link): Unit = dbQuery {
+    suspend fun addLink(link: Link): Unit = dbQuery {
         Links.insert {
             it[name] = link.name
             it[url] = link.url
         }
     }
 
-    override suspend fun removeLink(name: String): Boolean = dbQuery {
-       true
+    suspend fun addLinkCategory(category: LinkCategory): Unit = dbQuery {
+        LinkCategories.insert {
+            it[name] = category.name
+        }
     }
 }
 

@@ -1,1 +1,1 @@
-rootProject.name = "dash"
+rootProject.name = "kdash"

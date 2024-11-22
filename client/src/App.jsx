@@ -16,14 +16,12 @@ function App() {
   }, [])
 
   return (
-    <>
-      {
-        links.forEach(link => {
-          return <a href={link.url}>{link.name}</a>
-        })
-      }
-    
-    </>
+    <div>
+      {links.map(el => {
+        return <a href={el.url}>{el.name}</a>
+      })}
+
+    </div>
   )
 }
 
